@@ -22,7 +22,7 @@ def making_bitlink(token, short_url):
 
     response = requests.post('https://api-ssl.bitly.com/v4/bitlinks', json=data, headers=headers)
     response.raise_for_status()
-    return response
+    return response.json()["link"]
 
 
 def counting_clicks(token, short_url):
@@ -37,7 +37,7 @@ def counting_clicks(token, short_url):
     )
 
     response = requests.get(f'https://api-ssl.bitly.com/v4/bitlinks/{short_url}/clicks/summary', headers=headers, params=params)
-    return response
+    return response.json()["total_clicks"]
 
 
 def checking_bitlink(token, short_url):
@@ -60,13 +60,13 @@ if __name__ == "__main__":
 
     if checking_bitlink(token, short_url):
         try:
-            total_clicks = counting_clicks(token, short_url).json()["total_clicks"]
+            total_clicks = counting_clicks(token, short_url)
             print(total_clicks)
         except requests.exceptions.HTTPError:
             print('Не удалось получить информацию о количестве переходов по ссылке')
     else:
         try:
-            bitlink = making_bitlink(token, short_url).json()["link"]
+            bitlink = making_bitlink(token, short_url)
             print(bitlink)
         except requests.exceptions.HTTPError:
             print('Не удалось создать ссылку, т.к. что-то пошло не так')
