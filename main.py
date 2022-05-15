@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from urllib.parse import urlsplit
 
 
-def making_bitlink(token, short_url):
+def create_bitlink(token, short_url):
     full_url = f'http://{short_url}'
 
     headers = {
@@ -25,7 +25,7 @@ def making_bitlink(token, short_url):
     return response.json()["link"]
 
 
-def counting_clicks(token, short_url):
+def count_clicks(token, short_url):
 
     headers = {
         'Authorization': f'Bearer {token}',
@@ -40,7 +40,7 @@ def counting_clicks(token, short_url):
     return response.json()["total_clicks"]
 
 
-def checking_bitlink(token, short_url):
+def check_bitlink(token, short_url):
     headers = {
         'Authorization': f'Bearer {token}',
     }
@@ -58,9 +58,9 @@ if __name__ == "__main__":
     user_url = args.url
     short_url = ''.join(urlsplit(user_url)[1:])
 
-    if checking_bitlink(token, short_url):
+    if check_bitlink(token, short_url):
         try:
-            total_clicks = counting_clicks(token, short_url)
+            total_clicks = count_clicks(token, short_url)
             print(total_clicks)
         except requests.exceptions.HTTPError:
             print('Не удалось получить информацию о количестве переходов по ссылке')
